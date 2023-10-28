@@ -1,20 +1,22 @@
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import postBookThunk from '../redux/book/thunk/postBookThunk';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import updateBookThunk from '../redux/book/thunk/updateBookThunk';
 
-export default function BookForm() {
+export default function UpdateForm() {
+   const updateBook = useSelector((state) => state.update);
    const dispatch = useDispatch();
+
    const [name, setName] = useState('');
    const [author, setAuthor] = useState('');
    const [thumbnail, setThumbnail] = useState('');
    const [price, setPrice] = useState('');
    const [rating, setRating] = useState('');
-   const [featured, setFeatured] = useState(false);
+   const [featured, setFeatured] = useState('');
 
    const submitHandler = (event) => {
       event.preventDefault();
       dispatch(
-         postBookThunk({
+         updateBookThunk(updateBook.id, {
             name,
             author,
             thumbnail,
@@ -24,6 +26,22 @@ export default function BookForm() {
          })
       );
    };
+
+   useEffect(() => {
+      setName(updateBook.name);
+      setAuthor(updateBook.author);
+      setThumbnail(updateBook.thumbnail);
+      setPrice(updateBook.price);
+      setRating(updateBook.rating);
+      setFeatured(updateBook.featured);
+   }, [
+      updateBook.name,
+      updateBook.author,
+      updateBook.thumbnail,
+      updateBook.price,
+      updateBook.rating,
+      updateBook.featured,
+   ]);
 
    return (
       <form onSubmit={submitHandler} className="book-form">
@@ -111,7 +129,7 @@ export default function BookForm() {
          </div>
 
          <button type="submit" className="submit" id="submit">
-            Add Book
+            Update Book
          </button>
       </form>
    );

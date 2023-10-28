@@ -1,6 +1,17 @@
+import { useState } from 'react';
 import logo from './../assets/images/logo.svg';
+import { useDispatch } from 'react-redux';
+import { filterSearch } from '../redux/book/filter/actions';
 
 export default function Navbar() {
+   const dispatch = useDispatch();
+   const [keyWord, setKeyWord] = useState('');
+
+   const changeHandler = (event) => {
+      setKeyWord(event.target.value);
+      dispatch(filterSearch(event.target.value));
+   };
+
    return (
       <nav className="py-4 2xl:px-6">
          <div className="container flex items-center justify-between">
@@ -12,7 +23,10 @@ export default function Navbar() {
                <li className="cursor-pointer">My Collection</li>
             </ul>
 
-            <form className="flex items-center">
+            <form
+               onChange={(e) => e.preventDefault()}
+               className="flex items-center"
+            >
                <div className="group relative rounded-md bg-white">
                   <svg
                      width="20"
@@ -27,6 +41,8 @@ export default function Navbar() {
                      ></path>
                   </svg>
                   <input
+                     value={keyWord}
+                     onChange={changeHandler}
                      type="text"
                      placeholder="Filter books..."
                      className="search"
